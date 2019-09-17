@@ -1,0 +1,52 @@
+{
+  "name": "epsi-twitch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/app.js",
+    "dev": "nodemon --watch ./src --exec ts-node -r dotenv/config ./src/app.ts",
+    "build": "tsc",
+    "test": "ava",
+    "prettier": "prettier .circleci/config.yml  src/{**/,}*.{ts,json} tests/{**/,}*.{ts,json}",
+    "format:check": "npm run prettier -- --list-different",
+    "format:fix": "npm run prettier -- --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ked57/epsi-twitch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ked57/epsi-twitch/issues"
+  },
+  "homepage": "https://github.com/Ked57/epsi-twitch#readme",
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^12.7.4",
+    "@types/node-fetch": "^2.5.0",
+    "ava": "^2.3.0",
+    "dotenv": "^8.1.0",
+    "nodemon": "^1.19.2",
+    "prettier": "^1.18.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.6.2"
+  },
+  "dependencies": {
+    "fastify": "^2.8.0",
+    "node-fetch": "^2.6.0"
+  },
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "files": [
+      "!test/mock"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  }
+}
