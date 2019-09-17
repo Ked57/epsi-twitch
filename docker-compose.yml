@@ -1,0 +1,12 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  influxdb:
+    image: 'influxdb:1.4'
+
+  chronograf:
+    image: 'chronograf:1.4'
+    entrypoint: 'chronograf --influxdb-url=http://influxdb:8086'
+    depends_on: ['influxdb']
+    ports: ['8888:8888']
