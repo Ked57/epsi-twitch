@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import { handleGame } from "./game";
 
-export const main = async () => {
+const main = async () => {
   const app = fastify({});
 
   app.put("/game", (req, reply) => handleGame(req, reply));
@@ -11,4 +11,6 @@ export const main = async () => {
   return { app, address };
 };
 
-main().catch(err => console.error(err));
+main()
+  .then(fastify => console.log(`Server started: ${fastify.address}`))
+  .catch(err => console.error(err));
