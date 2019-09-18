@@ -6,13 +6,12 @@ const client = new Influx(`${db_url}:8086/${db_name}`);
 
 export const write = async ({
   name,
-  count,
-  date
+  count
 }: {
   name: string;
   count: number;
-  date: any;
 }) => {
+  const date = Date.now();
   await client
     .write(db_name)
     .tag({
@@ -22,4 +21,5 @@ export const write = async ({
       use: date,
       viewers: count
     });
+  console.log(`[${date}] => name: ${name}, count: ${count}`);
 };
