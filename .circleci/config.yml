@@ -61,7 +61,7 @@ workflows:
   deploy:
     jobs:
       - install-dependencies
-      - lint:
+      - check-format:
           requires:
             - install-dependencies
       - build:
