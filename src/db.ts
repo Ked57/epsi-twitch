@@ -13,10 +13,13 @@ export const write = async ({
   count: number;
   date: any;
 }) => {
-  await client.write(db_name).tag({
-    game: name
-  }).field({
-    use: date,
-    viewers: count
-  });
+  await client
+    .write(db_name)
+    .tag({
+      game: name
+    })
+    .field({
+      use: date,
+      viewers: count
+    });
 };

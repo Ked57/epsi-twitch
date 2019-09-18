@@ -15,7 +15,7 @@ const main = async () => {
       write({
         name: "World of warcraft",
         count: 80000 + Math.round(Math.random() * 100000),
-        date,
+        date
       });
       write({
         name: "Fortnite",
