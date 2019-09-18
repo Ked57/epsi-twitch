@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ServerResponse } from "http";
-import { insertRow } from "./db";
+import { write } from "./db";
 
 export const handleGame = async (
   request: FastifyRequest,
@@ -8,7 +8,7 @@ export const handleGame = async (
 ) => {
   try {
     const body = request.body;
-    await insertRow(body);
+    await write(body);
     reply.status(200).send();
   } catch (err) {
     console.error(err);

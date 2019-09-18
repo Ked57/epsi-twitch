@@ -1,0 +1,76 @@
+version: 2
+jobs:
+  install-dependencies:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
+      - run:
+          name: Download UI dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: dependencies-{{ checksum "package-lock.json" }}
+  check-format:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
+      - run:
+          name: Check formatting
+          command: npm run format:check
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
+      - run:
+          name: Build api
+          command: npm run build
+      - store_artifacts:
+          path: ./public
+          destination: api-prod-build
+  app-deploy:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run:
+          name: Install Captain Rover CLI
+          command: sudo npm install -g caprover
+      - deploy:
+          name: Deploy app to Captain Rover
+          command: caprover deploy -h $DOMAIN -p $PASSWORD -b master -a $APPNAME
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - build:
+          requires:
+            - install-dependencies
+      - app-deploy:
+          requires:
+            - build
+            - check-format
+          context: epsi-twitch
+          filters:
+            branches:
+              only: master

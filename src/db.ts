@@ -1,18 +1,22 @@
-import fetch from "node-fetch";
+const Influx = require("influxdb-nodejs");
 
 const db_url = process.env.DB_URL;
 const db_name = process.env.DB_NAME;
+const client = new Influx(`${db_url}:8086/${db_name}`);
 
-export const insertRow = async ({
+export const write = async ({
   name,
-  count
+  count,
+  date
 }: {
   name: string;
   count: number;
+  date: any;
 }) => {
-  const response = await fetch(`${db_url}/write?db=${db_name}`, {
-    method: "POST",
-    body: `${name},value=${count}`
+  await client.write(db_name).tag({
+    game: name
+  }).field({
+    use: date,
+    viewers: count
   });
-  console.log(response);
 };

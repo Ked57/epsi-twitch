@@ -1,0 +1,3 @@
+FROM influxdb:1.4
+
+EXPOSE 8080
