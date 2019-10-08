@@ -7,11 +7,11 @@ export const handleGame = async (
   reply: FastifyReply<ServerResponse>
 ) => {
   try {
-    const {game, viewerCount} = request.body;
-    console.log("game",game);
+    const { game, viewerCount } = request.body;
+    console.log("game", game);
     console.log("viewerCount", viewerCount);
-    if(typeof viewerCount !== "number" || typeof game !== "string"){
-      throw new Error("Received invalid payload")
+    if (typeof viewerCount !== "number" || typeof game !== "string") {
+      throw new Error("Received invalid payload");
     }
     await write(game, viewerCount);
     reply.status(200).send();
