@@ -12,7 +12,7 @@ export const write = async (name: string, count: number) => {
   await client
     .write(db_name)
     .tag({
-      game: name
+      game: name.replace(" ", "_")
     })
     .field({
       use: date,
