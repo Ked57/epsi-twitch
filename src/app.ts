@@ -17,7 +17,7 @@ const main = async () => {
     process.env.HOST || "0.0.0.0"
   );
 
-  return { app, address }; 
+  return { app, address };
 };
 
 main()
