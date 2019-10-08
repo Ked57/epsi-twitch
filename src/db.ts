@@ -13,11 +13,11 @@ export const write = async (name: string, count: number) => {
   await client
     .write(db_name)
     .tag({
-      game: name
-    })
-    .field({
       use: dateInMs,
       viewers: count
+    })
+    .field({
+      game: name
     });
   console.log(`[${date.toISOString()}] => name: ${name}, count: ${count}`);
 };
