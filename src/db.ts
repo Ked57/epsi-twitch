@@ -23,5 +23,5 @@ export const write = async (name: string, count: number) => {
 };
 
 export const read = async (date: Date, scale: Scale, game?: string) => {
-  return client.query("twitch").where(`time > ${date.getTime()} - 1${scale}`);
+  return client.query("twitch").where(`use > ${date.getTime()} - 1${scale}`);
 };

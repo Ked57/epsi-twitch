@@ -18,15 +18,21 @@ export const getPaginatedData = async (
   reply: FastifyReply<ServerResponse>
 ) => {
   try {
-    const date = request.params.date;
-    const delimiter = request.params.delimiter;
-    const game = request.params.game;
+    const date = new Date(request.query.date);
+    const delimiter = request.query.delimiter;
+    const game = request.query.game;
     if (!isDate(date)) {
-      badRequest("Error: no date param specified", reply);
+      badRequest(
+        "Error: no date param specified or incorrect parameter",
+        reply
+      );
       return;
     }
     if (!isDelimiter(delimiter)) {
-      badRequest("Error: no delimiter param specified", reply);
+      badRequest(
+        "Error: no delimiter param specified or incorrect parameter",
+        reply
+      );
       return;
     }
     return await matchRead(date, delimiter, game);
@@ -39,8 +45,8 @@ export const getPaginatedData = async (
 const matchRead = (date: Date, delimiter: Delimiter, game?: string) =>
   read(date, delimiterResolver[delimiter], game);
 
-const isDate = (date: unknown): date is Date =>
-  typeof date === "string" && typeof Date.parse(date) === "number";
+const isDate = (date: any): date is Date =>
+  date && typeof Date.parse(date) === "number";
 const isDelimiter = (delimiter: unknown): delimiter is Delimiter =>
   typeof delimiter === "string" &&
   (delimiter === "day" || delimiter === "month" || delimiter === "year");

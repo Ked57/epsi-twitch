@@ -10,5 +10,7 @@ export const badRequest = (
       "Error while handling a bad request: no error message specified"
     );
   }
-  reply.status(400).send(err);
+  reply
+    .status(400)
+    .send({ name: "Bad Request", statusCode: 403, message: err });
 };

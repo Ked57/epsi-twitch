@@ -1,9 +1,12 @@
 import fastify from "fastify";
 import { handleGame } from "./game";
 import { getPaginatedData } from "./data";
+import { authMiddleware } from "./auth";
 
 const main = async () => {
   const app = fastify({});
+
+  app.addHook("preHandler", authMiddleware);
 
   app.put("/game", (req, reply) => handleGame(req, reply));
 
@@ -14,7 +17,7 @@ const main = async () => {
     process.env.HOST || "0.0.0.0"
   );
 
-  return { app, address };
+  return { app, address }; 
 };
 
 main()
