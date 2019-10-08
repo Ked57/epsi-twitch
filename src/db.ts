@@ -8,14 +8,15 @@ const client = new Influx(`${db_url}:8086/${db_name}`);
 export type Scale = "d" | "m" | "y";
 
 export const write = async (name: string, count: number) => {
-  const date = new Date(Date.now());
+  const dateInMs = Date.now();
+  const date = new Date(dateInMs);
   await client
     .write(db_name)
     .tag({
-      game: name.replace(" ", "_")
+      game: name
     })
     .field({
-      use: date,
+      use: dateInMs,
       viewers: count
     });
   console.log(`[${date.toISOString()}] => name: ${name}, count: ${count}`);
