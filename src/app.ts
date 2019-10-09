@@ -2,6 +2,7 @@ import fastify from "fastify";
 import { handleGame } from "./game";
 import { getDataWithScale } from "./data";
 import { authMiddleware } from "./auth";
+import { getGamesList } from "./db";
 
 const main = async () => {
   const app = fastify({});
@@ -11,6 +12,8 @@ const main = async () => {
   app.put("/game", (req, reply) => handleGame(req, reply));
 
   app.get("/", (req, reply) => getDataWithScale(req, reply));
+
+  app.get("/list", (req, reply) => getGamesList())
 
   const address = await app.listen(
     Number(process.env.PORT || "3000"),

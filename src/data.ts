@@ -31,15 +31,12 @@ export const getDataWithScale = async (
     if(typeof gamesListString === "string"){
       games = gamesListString.split(",");
     }
-    return await matchRead(date, scale, games);
+    return await read(date, scale, games);
   } catch (err) {
     console.error(err);
     reply.status(500).send(err);
   }
 };
-
-const matchRead = (date: Date, scale: Scale, games?: string[]) =>
-  read(date, scale, games);
 
 const isDate = (date: any): date is Date =>
   date && typeof Date.parse(date) === "number";

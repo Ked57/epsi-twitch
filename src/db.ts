@@ -39,3 +39,5 @@ export const read = async (date: Date, scale: Scale, games?: string[]) => {
     `SELECT mean("viewerCount") AS "viewerCount" FROM "twitch"."autogen"."twitch" WHERE ${timeCondition} AND ${gamesCondition} GROUP BY time(1m), game FILL(null)`
   );
 };
+
+export const getGamesList = async () => await influx.query(`SHOW TAG VALUES ON "twitch" FROM "twitch" WITH KEY = "game"`)
