@@ -9,19 +9,17 @@ export type Point = {
 };
 
 export const handleGame = async (
-  request: FastifyRequest,
-  reply: FastifyReply<ServerResponse>
+  msg: string
 ) => {
   try {
-    const points = request.body.points;
+    const query = await JSON.parse(msg);
+    const points = query.points;
     if (!arePoints(points)) {
       throw new Error("Received invalid payload");
     }
     await write(points);
-    reply.status(200).send();
   } catch (err) {
     console.error(err);
-    reply.status(500).send(err);
   }
 };
 
