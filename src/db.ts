@@ -1,5 +1,6 @@
 import { Scale } from "./data";
 import * as Influx from "influx";
+import { Point } from "./game";
 
 const db_url = process.env.DB_URL;
 const db_name = process.env.DB_NAME;
@@ -17,17 +18,18 @@ const influx = new Influx.InfluxDB({
   ]
 });
 
-export const write = async (name: string, count: number) => {
+export const write = async (points: Point[]) => {
   const dateInMs = Date.now();
   const date = new Date(dateInMs);
-  await influx.writePoints([
-    {
+  await influx.writePoints(points.map(point =>
+    ({
       measurement: "twitch",
-      tags: { game: name },
-      fields: { viewerCount: count }
-    }
-  ]);
-  console.log(`[${date.toISOString()}] => name: ${name}, count: ${count}`);
+      tags: { game: point.game },
+      fields: { viewerCount: point.viewerCount },
+      timestamp: point.timestamp
+    }))
+  );
+  console.log(`[${date.toISOString()}] => Points added`);
 };
 
 export const read = async (date: Date, scale: Scale, games?: string[]) => {
