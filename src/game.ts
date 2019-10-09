@@ -9,16 +9,12 @@ export type Point = {
 };
 
 export const handleGame = async (msg: string) => {
-  try {
     const query = await JSON.parse(msg);
     const points = query.points;
     if (!arePoints(points)) {
       throw new Error("Received invalid payload");
     }
     await write(points);
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 const arePoints = (points: unknown): points is Point[] =>
