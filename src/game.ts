@@ -8,9 +8,7 @@ export type Point = {
   timestamp: number;
 };
 
-export const handleGame = async (
-  msg: string
-) => {
+export const handleGame = async (msg: string) => {
   try {
     const query = await JSON.parse(msg);
     const points = query.points;

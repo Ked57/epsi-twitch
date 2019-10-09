@@ -21,8 +21,8 @@ const influx = new Influx.InfluxDB({
 export const write = async (points: Point[]) => {
   const dateInMs = Date.now();
   const date = new Date(dateInMs);
-  await influx.writePoints(points.map(point =>
-    ({
+  await influx.writePoints(
+    points.map(point => ({
       measurement: "twitch",
       tags: { game: point.game },
       fields: { viewerCount: point.viewerCount },
@@ -42,4 +42,7 @@ export const read = async (date: Date, scale: Scale, games?: string[]) => {
   );
 };
 
-export const getGamesList = async () => await influx.query(`SHOW TAG VALUES ON "twitch" FROM "twitch" WITH KEY = "game"`)
+export const getGamesList = async () =>
+  await influx.query(
+    `SHOW TAG VALUES ON "twitch" FROM "twitch" WITH KEY = "game"`
+  );

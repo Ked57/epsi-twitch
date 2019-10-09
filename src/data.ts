@@ -28,7 +28,7 @@ export const getDataWithScale = async (
       );
       return;
     }
-    if(typeof gamesListString === "string"){
+    if (typeof gamesListString === "string") {
       games = gamesListString.split(",");
     }
     return await read(date, scale, games);
