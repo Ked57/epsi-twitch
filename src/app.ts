@@ -1,6 +1,6 @@
 import fastify from "fastify";
 import { handleGame } from "./game";
-import { getPaginatedData } from "./data";
+import { getDataWithScale } from "./data";
 import { authMiddleware } from "./auth";
 
 const main = async () => {
@@ -10,7 +10,7 @@ const main = async () => {
 
   app.put("/game", (req, reply) => handleGame(req, reply));
 
-  app.get("/", (req, reply) => getPaginatedData(req, reply));
+  app.get("/", (req, reply) => getDataWithScale(req, reply));
 
   const address = await app.listen(
     Number(process.env.PORT || "3000"),

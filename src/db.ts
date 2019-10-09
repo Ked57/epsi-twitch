@@ -1,27 +1,41 @@
-// no type declaration file for this package so we do it the old way
-const Influx = require("influxdb-nodejs");
+import { Scale } from "./data";
+import * as Influx from "influx";
 
 const db_url = process.env.DB_URL;
 const db_name = process.env.DB_NAME;
-const client = new Influx(`${db_url}:8086/${db_name}`);
-
-export type Scale = "d" | "m" | "y";
+const influx = new Influx.InfluxDB({
+  host: db_url,
+  database: db_name,
+  schema: [
+    {
+      measurement: "twitch",
+      fields: {
+        viewerCount: Influx.FieldType.INTEGER
+      },
+      tags: ["game"]
+    }
+  ]
+});
 
 export const write = async (name: string, count: number) => {
   const dateInMs = Date.now();
   const date = new Date(dateInMs);
-  await client
-    .write(db_name)
-    .tag({
-      game: name
-    })
-    .field({
-      use: dateInMs,
-      viewers: count
-    });
+  await influx.writePoints([
+    {
+      measurement: "twitch",
+      tags: { game: name },
+      fields: { viewerCount: count }
+    }
+  ]);
   console.log(`[${date.toISOString()}] => name: ${name}, count: ${count}`);
 };
 
-export const read = async (date: Date, scale: Scale, game?: string) => {
-  return client.query("twitch").where(`use > ${date.getTime()} - 1${scale}`);
+export const read = async (date: Date, scale: Scale, games?: string[]) => {
+  const timeCondition = `time > ${date.getTime() * 1000000} - 1${scale}`;
+  const gamesCondition = games
+    ? games.map(game => `"game"='${game}'`).join(" OR ")
+    : "";
+  return await influx.query(
+    `SELECT mean("viewerCount") AS "viewerCount" FROM "twitch"."autogen"."twitch" WHERE ${timeCondition} AND ${gamesCondition} GROUP BY time(1m), game FILL(null)`
+  );
 };
