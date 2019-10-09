@@ -1,5 +1,3 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { ServerResponse } from "http";
 import { write } from "./db";
 
 export type Point = {
@@ -9,12 +7,12 @@ export type Point = {
 };
 
 export const handleGame = async (msg: string) => {
-    const query = await JSON.parse(msg);
-    const points = query.points;
-    if (!arePoints(points)) {
-      throw new Error("Received invalid payload");
-    }
-    await write(points);
+  const query = await JSON.parse(msg);
+  const points = query.points;
+  if (!arePoints(points)) {
+    throw new Error("Received invalid payload");
+  }
+  await write(points);
 };
 
 const arePoints = (points: unknown): points is Point[] =>

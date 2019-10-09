@@ -34,11 +34,12 @@ export const write = async (points: Point[]) => {
 
 export const read = async (date: Date, scale: Scale, games?: string[]) => {
   const timeCondition = `time > ${date.getTime() * 1000000} - 1${scale}`;
-  const gamesCondition = games
-    ? games.map(game => `"game"='${game}'`).join(" OR ")
-    : "";
+  const gamesCondition =
+    games && games.length > 0
+      ? `AND (${games.map(game => `"game"='${game}'`).join(" OR ")})`
+      : "";
   return await influx.query(
-    `SELECT mean("viewerCount") AS "viewerCount" FROM "twitch"."autogen"."twitch" WHERE ${timeCondition} AND ${gamesCondition} GROUP BY time(1m), game FILL(null)`
+    `SELECT mean("viewerCount") AS "viewerCount" FROM "twitch"."autogen"."twitch" WHERE ${timeCondition} ${gamesCondition} GROUP BY time(1m), game FILL(null)`
   );
 };
 
