@@ -2,6 +2,12 @@ import { Scale } from "./data";
 import * as Influx from "influx";
 import { Point } from "./game";
 
+const intervalResolver = {
+  h: "1m",
+  d: "1h",
+  w: "1d" 
+}
+
 const db_url = process.env.DB_URL;
 const db_name = process.env.DB_NAME;
 const influx = new Influx.InfluxDB({
@@ -32,14 +38,17 @@ export const write = async (points: Point[]) => {
   console.log(`[${date.toISOString()}] => Points added`);
 };
 
-export const read = async (date: Date, scale: Scale, games?: string[]) => {
-  const timeCondition = `time > ${date.getTime() * 1000000} - 1${scale}`;
-  const gamesCondition =
-    games && games.length > 0
-      ? `AND (${games.map(game => `"game"='${game}'`).join(" OR ")})`
-      : "";
+const buildTimeCondition = (date: Date, scale: Scale) =>`time > ${date.getTime() * 1000000} - 1${scale}`;
+const determineInterval = (scale: Scale) => intervalResolver[scale];
+const buildGamesCondition = (games: string[]) =>  games && games.length > 0
+? `AND (${games.map(game => `"game"='${game}'`).join(" OR ")})`
+: ""
+
+const buildQuery = (timeCondition: string, gamesCondition: string, interval: string) => `SELECT mean("viewerCount") AS "viewerCount" FROM "twitch"."autogen"."twitch" WHERE ${timeCondition} ${gamesCondition} GROUP BY time(${interval}), game FILL(null)`
+
+export const read = async (date: Date, scale: Scale, games: string[]) => {
   return await influx.query(
-    `SELECT mean("viewerCount") AS "viewerCount" FROM "twitch"."autogen"."twitch" WHERE ${timeCondition} ${gamesCondition} GROUP BY time(1m), game FILL(null)`
+    buildQuery(buildTimeCondition(date,scale), buildGamesCondition(games), determineInterval(scale))
   );
 };
 

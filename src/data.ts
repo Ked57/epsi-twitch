@@ -3,7 +3,7 @@ import { ServerResponse } from "http";
 import { badRequest } from "./reply";
 import { read } from "./db";
 
-export type Scale = "ms" | "s" | "h" | "d" | "w" | "m" | "y";
+export type Scale = "h" | "d" | "w";
 
 export const getDataWithScale = async (
   request: FastifyRequest,
@@ -44,8 +44,7 @@ const isScale = (scale: unknown): scale is Scale =>
   typeof scale === "string" &&
   (scale === "ms" ||
     scale === "s" ||
+    scale === "m" ||
     scale === "h" ||
     scale === "d" ||
-    scale === "w" ||
-    scale === "m" ||
-    scale === "y");
+    scale === "w");
