@@ -2,7 +2,7 @@ import fastify from "fastify";
 import { handleGame } from "./game";
 import { getDataWithScale } from "./data";
 import { authMiddleware } from "./auth";
-import { getGamesList } from "./db";
+import { getGamesList } from "./db/db";
 import ampqlib from "amqplib";
 
 const AMQP_USER = process.env.AMQP_USER || "";
