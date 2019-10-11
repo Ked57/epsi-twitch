@@ -37,6 +37,6 @@ export const isPointToWrite = (point: any): point is PointToWrite =>
   typeof point.tags.game === "string" &&
   point.fields &&
   typeof point.fields.viewerCount === "number" &&
-  Math.round(point.fields.viewerCount) ===  point.fields.viewerCount &&
-  typeof point.timestamp === "number"&&
-  Math.round(point.timestamp) ===  point.timestamp;
+  Math.round(point.fields.viewerCount) === point.fields.viewerCount &&
+  typeof point.timestamp === "number" &&
+  Math.round(point.timestamp) === point.timestamp;
