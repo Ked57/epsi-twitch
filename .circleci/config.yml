@@ -29,6 +29,18 @@ jobs:
       - run:
           name: Check formatting
           command: npm run format:check
+  test:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
+      - run:
+          name: Run tests
+          command: npm run test
   build:
     docker:
       - image: circleci/node:10
@@ -64,13 +76,16 @@ workflows:
       - check-format:
           requires:
             - install-dependencies
-      - build:
+      - test:
           requires:
             - install-dependencies
+      - build:
+          requires:
+            - check-format
+            - test
       - app-deploy:
           requires:
             - build
-            - check-format
           context: epsi-twitch
           filters:
             branches:

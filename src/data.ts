@@ -1,9 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ServerResponse } from "http";
 import { badRequest } from "./reply";
-import { read } from "./db";
-
-export type Scale = "h" | "d" | "w";
+import { read } from "./db/db";
+import { isScale } from "./types";
 
 export const getDataWithScale = async (
   request: FastifyRequest,
@@ -40,11 +39,3 @@ export const getDataWithScale = async (
 
 const isDate = (date: any): date is Date =>
   date && typeof Date.parse(date) === "number";
-const isScale = (scale: unknown): scale is Scale =>
-  typeof scale === "string" &&
-  (scale === "ms" ||
-    scale === "s" ||
-    scale === "m" ||
-    scale === "h" ||
-    scale === "d" ||
-    scale === "w");
