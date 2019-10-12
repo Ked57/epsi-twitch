@@ -3,6 +3,7 @@ import { handleGame } from "./game";
 import { getDataWithScale } from "./data";
 import { authMiddleware } from "./auth";
 import { getGamesList } from "./db/db";
+import cors from "fastify-cors";
 import ampqlib from "amqplib";
 
 const AMQP_USER = process.env.AMQP_USER || "";
@@ -16,6 +17,7 @@ const main = async () => {
   const app = fastify({});
 
   app.addHook("preHandler", authMiddleware);
+  app.register(cors);
 
   //app.put("/game", (req, reply) => handleGame(req, reply));
 
